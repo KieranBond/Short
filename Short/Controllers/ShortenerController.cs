@@ -1,5 +1,7 @@
+using CQRS.Commands;
 using Microsoft.AspNetCore.Mvc;
 using Short.Services;
+using System.ComponentModel.DataAnnotations;
 
 namespace Short.Controllers
 {
@@ -17,13 +19,15 @@ namespace Short.Controllers
         }
 
         [HttpGet]
-        public bool Get()
+        public string Get( [Required] string urlToShorten )
         {
-            _logger.LogDebug( "Received GET" );
+            _logger.LogDebug( "Received GET for {url}", urlToShorten );
 
-            //_service.
+            var shortenedUrl = _service.ShortenUrl( new Handle<string>( urlToShorten ) );
 
-            return false;
+            _logger.LogDebug( "Shortened {url} to {shortenedUrl}", urlToShorten, shortenedUrl );
+
+            return shortenedUrl;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Short.Extensions
     {
         public static IServiceCollection AddRedis( this IServiceCollection services, RedisConfig config )
         {
-            ConfigurationOptions redisConfig = new ConfigurationOptions()
+            ConfigurationOptions redisConfig = new()
             {
                 EndPoints = { { $"{config.Url}:6379" } },
                 AbortOnConnectFail = false,

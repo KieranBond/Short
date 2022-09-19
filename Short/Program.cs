@@ -8,7 +8,7 @@ var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-var redisConfig = new RedisConfig( configuration.GetSection( "Redis" ).Get<string>() );
+var redisConfig = new RedisConfig( configuration.GetSection( "Redis" ).GetValue<string>("Url") );
 
 var builder = WebApplication.CreateBuilder(args);
 

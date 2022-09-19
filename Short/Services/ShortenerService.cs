@@ -14,15 +14,16 @@ namespace Short.Services
 
         public string ShortenUrl( Handle<string> cmd )
         {
-            throw new NotImplementedException();
-            // TODO: See if URL is cached
-            // var shortenedUrl = Compress( url );
-            // SaveUrl( url, shortenedUrl );
-        }
+            var dto = cmd.Dto;
+            
+            if ( _redis.KeyExists(dto) )
+            {
+                return _redis.StringGet( dto );
+            }
 
-        private string Compress( string toCompress )
-        {
-            throw new NotImplementedException();
+            var shortenedUrl = Guid.NewGuid().ToString()[ ..5 ];
+            _redis.StringSet( dto, shortenedUrl, TimeSpan.FromHours(24) );
+            return shortenedUrl;
         }
     }
 }
