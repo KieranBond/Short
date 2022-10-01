@@ -3,7 +3,7 @@ using StackExchange.Redis;
 
 namespace Short.Services
 {
-    public class ShortenerService
+    public class ShortenerService : IShortenerService
     {
         private readonly IDatabase _redis;
 

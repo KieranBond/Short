@@ -1,11 +1,19 @@
-version: '3.5'
+version: '3.4'
 
 services:
+  short:
+    image: ${DOCKER_REGISTRY-}short
+    ports: 
+        - "6379:6379"
+    build:
+      context: .
+      dockerfile: Short/Dockerfile
+
   redis:
     image: redis:latest
     command: [ "redis-server", "/redis.conf" ]
     ports:
-      - "6379:6379"
+      - "6380:6380"
     volumes:
       - ./config/redis.conf:/redis.conf
       - ./.redis:/data
