@@ -1,5 +1,6 @@
 using Short.Config;
 using Short.Extensions;
+using Short.Repositories;
 using Short.Services;
 
 var configuration = new ConfigurationBuilder()
@@ -20,7 +21,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddRedis( redisConfig );
-builder.Services.AddSingleton<ShortenerService>();
+
+builder.Services.AddSingleton<IShortenerRepository, ShortenerRepository>();
+builder.Services.AddSingleton<IShortenerService, ShortenerService>();
 
 var app = builder.Build();
 

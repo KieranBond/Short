@@ -2,29 +2,25 @@ using AutoFixture;
 using CQRS.Commands;
 using FluentAssertions;
 using Moq;
+using Short.Repositories;
 using Short.Services;
-using StackExchange.Redis;
 using Xunit;
 
 namespace Short.Tests
 {
     public class ShortenerServiceTests
     {
-        readonly Mock<IConnectionMultiplexer> _mockRedisConnector;
-        readonly Mock<IDatabase> _mockRedis;
         readonly ShortenerService _service;
+        readonly Mock<IShortenerRepository> _mockRepository;
         readonly Fixture _fixture;
 
         public ShortenerServiceTests()
         {
             _fixture = new Fixture();
 
-            _mockRedis = new Mock<IDatabase>( MockBehavior.Loose );
-            _mockRedisConnector = new Mock<IConnectionMultiplexer>();
-            _mockRedisConnector.Setup( r => r.GetDatabase( It.IsAny<int>(), It.IsAny<object>() ) ).Returns( _mockRedis.Object );
-            _mockRedis.Setup( r => r.KeyExists( It.IsAny<RedisKey>(), It.IsAny<CommandFlags>() ) ).Returns( false );
+            _mockRepository = new Mock<IShortenerRepository>();
 
-            _service = new ShortenerService( _mockRedisConnector.Object );
+            _service = new ShortenerService( _mockRepository.Object );
         }
 
         [Fact]
@@ -42,25 +38,22 @@ namespace Short.Tests
         }
 
         [Fact]
-        public void ShortenUrl_Should_Return_Cached_If_Exists()
+        public void ShortenUrl_Should_Query_Repository_For_Existing()
         {
             // Setup
             var testCmd = _fixture.Create<Handle<string>>();
             var cachedResult = _fixture.Create<string>();
 
-            _mockRedis
-                .Setup( r => r.KeyExists( It.IsAny<RedisKey>(), It.IsAny<CommandFlags>() ) )
-                .Returns( true );
-
-            _mockRedis
-                .Setup( r => r.StringGet( It.Is<RedisKey>( s => s.ToString() == testCmd.Dto ), It.IsAny<CommandFlags>() ) )
-                .Returns( cachedResult );
+            _mockRepository
+                .Setup( r => r.TryRetrieve( It.IsAny<string>(), out cachedResult ) )
+                .Verifiable();
 
             // Act
             var result = _service.ShortenUrl( testCmd );
 
             // Assert
             result.Should().Be( cachedResult );
+            _mockRepository.Verify();
         }
     }
 }
