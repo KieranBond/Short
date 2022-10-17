@@ -50,7 +50,7 @@ namespace Short.Controllers
         [Route("/shorten")]
 		[SwaggerResponse( (int)HttpStatusCode.OK )]
         [SwaggerResponse( (int)HttpStatusCode.InternalServerError )]
-        public IActionResult ShortenUrl ( [FromBody( EmptyBodyBehavior = EmptyBodyBehavior.Disallow )] string urlToShorten )
+        public IActionResult ShortenUrl ( [Required] string urlToShorten )
         {
             _logger.LogDebug( "Received GET to shorten {url}", urlToShorten );
 
