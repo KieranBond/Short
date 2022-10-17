@@ -1,29 +1,30 @@
 ﻿using CQRS.Commands;
-using StackExchange.Redis;
+using Short.Repositories;
 
 namespace Short.Services
 {
-    public class ShortenerService : IShortenerService
+    public sealed class ShortenerService : IShortenerService
     {
-        private readonly IDatabase _redis;
+        private readonly IShortenerRepository _repository; 
 
-        public ShortenerService( IConnectionMultiplexer redis )
+        public ShortenerService( IShortenerRepository repository )
         {
-            _redis = redis.GetDatabase();
+            _repository = repository;
         }
 
         public string ShortenUrl( Handle<string> cmd )
         {
             var dto = cmd.Dto;
             
-            if ( _redis.KeyExists(dto) ) 
+            if ( ! _repository.TryRetrieve( dto, out var result ) && result != null ) 
             {
-                return _redis.StringGet( dto );
+                return result;
             }
 
             // TODO: We can't guarantee currently that this value is unique...
             var shortenedUrl = Guid.NewGuid().ToString()[ ..5 ];
-            _redis.StringSet( dto, shortenedUrl, TimeSpan.FromHours(24) );
+            _repository.Save( dto, shortenedUrl );
+            
             return shortenedUrl;
         }
     }

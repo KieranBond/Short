@@ -1,5 +1,7 @@
 using CQRS.Commands;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Short.Repositories;
 using Short.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -12,12 +14,14 @@ namespace Short.Controllers
     public class ShortenerController : Controller
     {
         private readonly ILogger<ShortenerController> _logger;
-        private readonly ShortenerService _service;
+        private readonly IShortenerService _service;
+        private readonly IShortenerRepository _repository;
 
-        public ShortenerController ( ILogger<ShortenerController> logger, ShortenerService service )
+        public ShortenerController ( ILogger<ShortenerController> logger, IShortenerService service, IShortenerRepository repository )
         {
             _logger = logger;
             _service = service;
+            _repository = repository;
         }
 
         [HttpGet]
@@ -30,10 +34,9 @@ namespace Short.Controllers
 
             try
             {
-                //TODO: Fetch URL from repository?
-                // var lengthenedUrl = _repository.FetchShortenedUrl( new Get<string>( urlToFetch  ) );
-                // _logger.LogDebug( "Received {lengthenedUrl} for {shortenedUrl}", lengthenedUrl, urlToFetch );
-                //return Ok( lengthenedUrl );
+                _repository.TryRetrieve( urlToFetch, out var lengthenedUrl );
+                _logger.LogDebug( "Received {lengthenedUrl} for {shortenedUrl}", lengthenedUrl, urlToFetch );
+                return Ok( lengthenedUrl );
             }
             catch ( Exception ex )
             {
@@ -47,7 +50,7 @@ namespace Short.Controllers
         [Route("/shorten")]
 		[SwaggerResponse( (int)HttpStatusCode.OK )]
         [SwaggerResponse( (int)HttpStatusCode.InternalServerError )]
-        public IActionResult ShortenUrl ( [Required(AllowEmptyStrings = false)] string urlToShorten )
+        public IActionResult ShortenUrl ( [Required] string urlToShorten )
         {
             _logger.LogDebug( "Received GET to shorten {url}", urlToShorten );
 
