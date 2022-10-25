@@ -9,8 +9,9 @@ namespace Short.Extensions
         {
             ConfigurationOptions redisConfig = new()
             {
-                EndPoints = { { $"{config.Url}:6380" } },
-                AbortOnConnectFail = false,
+                EndPoints = { $"{config.Url}:6379" },
+                AbortOnConnectFail = true,
+                //AbortOnConnectFail = false,
                 Ssl = false,
             };
 
