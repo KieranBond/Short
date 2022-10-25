@@ -4,16 +4,18 @@ services:
   short:
     image: ${DOCKER_REGISTRY-}short
     ports: 
-        - "6379:6379"
+        - "6380:6380"
     build:
       context: .
       dockerfile: Short/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
 
   redis:
     image: redis:latest
     command: [ "redis-server", "/redis.conf" ]
     ports:
-      - "6380:6380"
+      - "6379:6379"
     volumes:
       - ./config/redis.conf:/redis.conf
       - ./.redis:/data
