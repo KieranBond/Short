@@ -10,6 +10,9 @@ services:
       dockerfile: Short/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:6380
+    depends_on:
+      - redis
 
   redis:
     image: redis:latest
