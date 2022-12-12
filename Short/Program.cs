@@ -1,11 +1,14 @@
+using Microsoft.VisualBasic;
 using Short.Config;
 using Short.Extensions;
 using Short.Repositories;
 using Short.Services;
 
+string? env = Environment.GetEnvironmentVariable( "ASPNETCORE_ENVIRONMENT" )
+    .ToLower();
 var configuration = new ConfigurationBuilder()
-    .AddJsonFile( "appsettings.json", optional: true, reloadOnChange: true )
-    .AddJsonFile( "appsettings.Development.json", optional: true, reloadOnChange: true )
+    .AddJsonFile( $"appsettings.json", true, true )
+    .AddJsonFile( $"appsettings.{env}.json", true, true )
     .AddEnvironmentVariables()
     .Build();
 
@@ -28,11 +31,8 @@ builder.Services.AddSingleton<IShortenerService, ShortenerService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
