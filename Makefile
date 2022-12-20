@@ -5,7 +5,7 @@ SHELL := /bin/bash
 PHONY: test redis run run-build
 
 test:
-	@docker-compose -f docker-compose-tests.yml run --rm test run-tests.sh
+	@docker-compose -f docker-compose-tests.yml run --rm test .buildscripts/run-tests.sh
 
 redis:
 	@docker-compose up redis
