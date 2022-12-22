@@ -2,10 +2,13 @@ SHELL := /bin/bash
 
 .SILENT:
 
-PHONY: test redis run run-build
+PHONY: test build redis run run-rebuild
 
 test:
 	@docker-compose -f docker-compose-tests.yml run --rm test .buildscripts/run-tests.sh
+
+build:
+	@docker build -f Short/Dockerfile .
 
 redis:
 	@docker-compose up redis
@@ -13,5 +16,5 @@ redis:
 run: 
 	@docker-compose up
 
-run-build:
+run-rebuild:
 	@docker-compose up --build
