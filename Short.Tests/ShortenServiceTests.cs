@@ -34,7 +34,7 @@ namespace Short.Tests
 
             // Assert
             result.Should().NotBe( testCmd.Dto );
-            result.Should().HaveLength( 1 );
+            result.Should().HaveLength( 5 );
         }
 
         [Fact]
