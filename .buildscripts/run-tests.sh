@@ -1,3 +1,3 @@
 set -euxo pipefail
 
-dotnet test ./Short.Tests/ --collect "Code Coverage"
+dotnet test ./Short.Tests/ --collect "Xplat Code Coverage"
