@@ -22,11 +22,5 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
-    - name: Restore dependencies
-      run: dotnet restore ./Short/Short.csproj
-    
-    - name: Build
-      run: dotnet build --no-restore ./Short/Short.csproj
-    
-    - name: Test
-      run: dotnet test --no-build --verbosity normal ./Short/Short.csproj
+    - name: Run tests
+      run: make test
