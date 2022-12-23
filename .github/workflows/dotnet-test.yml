@@ -21,18 +21,12 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    
-    - name: Change directory
-      run: cd Short
-    
-    - name: List directory
-      run: ls
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./Short/Short.csproj
     
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore ./Short/Short.csproj
     
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal ./Short/Short.csproj
