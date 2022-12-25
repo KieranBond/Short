@@ -5,7 +5,7 @@ SHELL := /bin/bash
 PHONY: test build redis run run-rebuild
 
 test:
-	@docker-compose -f docker-compose-tests.yml run --rm test .buildscripts/run-tests.sh
+	@docker-compose -f docker-compose-tests.yml run --rm dotnet .buildscripts/run-tests.sh
 
 build:
 	@docker build -f Short/Dockerfile .
