@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  test:
+  dotnet:
     image: mcr.microsoft.com/dotnet/sdk:6.0
     entrypoint: /bin/bash
     working_dir: /app/
